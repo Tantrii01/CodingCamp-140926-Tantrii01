@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense &amp; Budget Visualizer</title>
+
+  <!-- Application stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- =============================================
+       HEADER
+       - Displays the app title and subtitle
+       - Contains the dark/light mode toggle button
+  ============================================== -->
+  <header class="site-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <h1>Expense &amp; Budget Visualizer</h1>
+        <p class="subtitle">Track and visualize your spending</p>
+      </div>
+
+      <!-- Optional Feature 3: Dark / Light Mode Toggle -->
+      <button
+        id="theme-toggle"
+        class="theme-toggle-btn"
+        aria-label="Toggle dark and light mode"
+        title="Toggle dark/light mode"
+      >
+        🌙 Dark Mode
+      </button>
+    </div>
+  </header>
+
+  <!-- =============================================
+       MAIN CONTENT
+       - Wraps all interactive sections of the app
+  ============================================== -->
+  <main class="main-content">
+
+    <!-- ============================================
+         LEFT COLUMN
+         - Expense input form
+         - Spending limit control
+         - Pie chart
+    ============================================= -->
+    <section class="left-column">
+
+      <!-- ------------------------------------------
+           EXPENSE INPUT FORM
+           - Users fill this in to add a new expense
+      ------------------------------------------- -->
+      <section class="form-section" aria-labelledby="form-heading">
+        <h2 id="form-heading">Add New Expense</h2>
+
+        <form id="expense-form" novalidate>
+
+          <!-- Item Name -->
+          <div class="form-group">
+            <label for="item-name">Item Name</label>
+            <input
+              type="text"
+              id="item-name"
+              name="item-name"
+              placeholder="e.g. Lunch, Bus ticket"
+              autocomplete="off"
+              required
+            />
+          </div>
+
+          <!-- Amount -->
+          <div class="form-group">
+            <label for="amount">Amount </label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder="e.g. 10.000"
+              min="0.01"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+              <option value="" disabled selected>Select a category</option>
+              <option value="Food">🍔 Food</option>
+              <option value="Transport">🚌 Transport</option>
+              <option value="Fun">🎉 Fun</option>
+            </select>
+          </div>
+
+          <!-- Validation / Error Message Area -->
+          <div
+            id="error-message"
+            class="error-message"
+            role="alert"
+            aria-live="polite"
+            hidden
+          >
+            <!-- Error text is injected here by JavaScript -->
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="add-btn" class="btn btn-primary">
+            + Add Expense
+          </button>
+
+        </form>
+      </section>
+      <!-- end .form-section -->
+
+      <!-- ------------------------------------------
+           SPENDING LIMIT
+           Optional Feature 2: user sets a budget cap
+           A warning is shown when total exceeds it
+      ------------------------------------------- -->
+      <section class="limit-section" aria-labelledby="limit-heading">
+        <h2 id="limit-heading">Spending Limit</h2>
+
+        <div class="form-group">
+          <label for="spending-limit">Set Budget Limit </label>
+          <input
+            type="number"
+            id="spending-limit"
+            name="spending-limit"
+            placeholder="e.g. 100.000"
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        <!-- Warning banner shown when total exceeds the limit -->
+        <div
+          id="limit-warning"
+          class="limit-warning"
+          role="alert"
+          aria-live="assertive"
+          hidden
+        >
+          ⚠️ You have exceeded your spending limit!
+        </div>
+      </section>
+      <!-- end .limit-section -->
+
+      <!-- ------------------------------------------
+           PIE CHART
+           Visualizes spending broken down by category
+           Chart.js draws inside the <canvas> element
+      ------------------------------------------- -->
+      <section class="chart-section" aria-labelledby="chart-heading">
+        <h2 id="chart-heading">Spending by Category</h2>
+
+        <div class="chart-container">
+          <canvas id="expense-chart" aria-label="Pie chart of spending by category" role="img">
+            Your browser does not support the canvas element.
+          </canvas>
+        </div>
+      </section>
+      <!-- end .chart-section -->
+
+    </section>
+    <!-- end .left-column -->
+
+    <!-- ============================================
+         RIGHT COLUMN
+         - Total spending display
+         - Sort controls
+         - Transaction list
+    ============================================= -->
+    <section class="right-column">
+
+      <!-- ------------------------------------------
+           TOTAL SPENDING
+           Auto-updates every time a transaction is
+           added or deleted
+      ------------------------------------------- -->
+      <section class="total-section" aria-labelledby="total-heading">
+        <h2 id="total-heading">Total Spending</h2>
+
+        <p class="total-amount" id="total-amount" aria-live="polite">
+          0.00
+        </p>
+      </section>
+      <!-- end .total-section -->
+
+      <!-- ------------------------------------------
+           SORT CONTROLS
+           Optional Feature 1: sort the transaction
+           list by amount or category
+      ------------------------------------------- -->
+      <section class="sort-section" aria-labelledby="sort-heading">
+        <h2 id="sort-heading" class="sr-only">Sort Transactions</h2>
+
+        <div class="sort-controls">
+          <label for="sort-select">Sort by:</label>
+          <select id="sort-select" name="sort-select">
+            <option value="default">Default (newest first)</option>
+            <option value="amount-asc">Amount: Low to High</option>
+            <option value="amount-desc">Amount: High to Low</option>
+            <option value="category-az">Category: A to Z</option>
+          </select>
+        </div>
+      </section>
+      <!-- end .sort-section -->
+
+      <!-- ------------------------------------------
+           TRANSACTION LIST
+           Displays all saved expenses
+           Each item has a delete button
+           JavaScript populates this dynamically
+      ------------------------------------------- -->
+      <section class="list-section" aria-labelledby="list-heading">
+        <h2 id="list-heading">Transactions</h2>
+
+        <!-- Empty state message shown when no transactions exist -->
+        <p id="empty-message" class="empty-message">
+          No expenses yet. Add one above!
+        </p>
+
+        <!-- Transaction items are injected here by JavaScript -->
+        <ul id="transaction-list" class="transaction-list" aria-label="Transaction list">
+        </ul>
+      </section>
+      <!-- end .list-section -->
+
+    </section>
+    <!-- end .right-column -->
+
+  </main>
+  <!-- end .main-content -->
+
+  <!-- =============================================
+       FOOTER
+  ============================================== -->
+  <footer class="site-footer">
+    <p>Expense &amp; Budget Visualizer &mdash; CodingCamp 310826 &mdash; Tantrii01</p>
+  </footer>
+
+  <!-- =============================================
+       SCRIPTS
+       Chart.js must load before app.js so the
+       Chart class is available when app.js runs
+  ============================================== -->
+
+  <!-- Chart.js library (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Application logic -->
+  <script src="js/app.js" defer></script>
+
+</body>
+
+</html>

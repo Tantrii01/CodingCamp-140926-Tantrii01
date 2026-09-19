@@ -1,0 +1,718 @@
+/* ==============================================
+   TABLE OF CONTENTS
+   1.  CSS Custom Properties (Themes)
+   2.  Reset & Base Styles
+   3.  Utility Classes
+   4.  Layout — Header
+   5.  Layout — Main Content (two-column grid)
+   6.  Layout — Footer
+   7.  Cards (shared section wrapper style)
+   8.  Form — Inputs, Labels, Select
+   9.  Buttons
+   10. Error & Warning Messages
+   11. Total Spending Display
+   12. Sort Controls
+   13. Transaction List
+   14. Category Badges
+   15. Chart Section
+   16. Responsive — Mobile (≤768px)
+   17. Theme Transition
+=============================================== */
+
+
+/* ==============================================
+   1. CSS CUSTOM PROPERTIES (THEMES)
+   All colors are defined here as variables.
+   Switching data-theme="dark" on <html> swaps
+   every color automatically.
+=============================================== */
+
+/* --- Light theme (default) --- */
+[data-theme="light"] {
+  --color-bg:           #f4f6f9;
+  --color-surface:      #ffffff;
+  --color-surface-alt:  #f0f2f5;
+  --color-border:       #dde1e8;
+  --color-text:         #1a1d23;
+  --color-text-muted:   #6b7280;
+  --color-heading:      #111827;
+  --color-primary:      #4f63d2;
+  --color-primary-hover:#3a4fb8;
+  --color-primary-text: #ffffff;
+  --color-delete:       #e53e3e;
+  --color-delete-hover: #c53030;
+  --color-total:        #1a1d23;
+  --color-total-over:   #e53e3e;
+  --color-warning-bg:   #fff5f5;
+  --color-warning-border:#fc8181;
+  --color-warning-text: #c53030;
+  --color-error-bg:     #fff5f5;
+  --color-error-border: #fc8181;
+  --color-error-text:   #c53030;
+  --color-shadow:       rgba(0, 0, 0, 0.07);
+
+  /* Category colors */
+  --color-food:         #38a169;
+  --color-food-bg:      #f0fff4;
+  --color-transport:    #3182ce;
+  --color-transport-bg: #ebf8ff;
+  --color-fun:          #dd6b20;
+  --color-fun-bg:       #fffaf0;
+}
+
+/* --- Dark theme --- */
+[data-theme="dark"] {
+  --color-bg:           #0f1117;
+  --color-surface:      #1a1d27;
+  --color-surface-alt:  #22263a;
+  --color-border:       #2d3147;
+  --color-text:         #e2e8f0;
+  --color-text-muted:   #94a3b8;
+  --color-heading:      #f1f5f9;
+  --color-primary:      #667eea;
+  --color-primary-hover:#7c8ff0;
+  --color-primary-text: #ffffff;
+  --color-delete:       #fc8181;
+  --color-delete-hover: #f56565;
+  --color-total:        #e2e8f0;
+  --color-total-over:   #fc8181;
+  --color-warning-bg:   #2d1515;
+  --color-warning-border:#fc8181;
+  --color-warning-text: #fc8181;
+  --color-error-bg:     #2d1515;
+  --color-error-border: #fc8181;
+  --color-error-text:   #fc8181;
+  --color-shadow:       rgba(0, 0, 0, 0.4);
+
+  /* Category colors */
+  --color-food:         #68d391;
+  --color-food-bg:      #1a2e22;
+  --color-transport:    #63b3ed;
+  --color-transport-bg: #172333;
+  --color-fun:          #f6ad55;
+  --color-fun-bg:       #2d1f0a;
+}
+
+
+/* ==============================================
+   2. RESET & BASE STYLES
+   Removes browser inconsistencies and sets
+   sensible defaults for all elements.
+=============================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3 {
+  color: var(--color-heading);
+  line-height: 1.3;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input, select, button {
+  font-size: 1rem;
+}
+
+
+/* ==============================================
+   3. UTILITY CLASSES
+=============================================== */
+
+/* Screen-reader only text — hidden visually but
+   accessible to assistive technologies */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ==============================================
+   4. LAYOUT — HEADER
+   Full-width top bar with title and theme toggle
+=============================================== */
+
+.site-header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 1.5rem;
+  box-shadow: 0 1px 4px var(--color-shadow);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-titles h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--color-border);
+}
+
+
+/* ==============================================
+   5. LAYOUT — MAIN CONTENT
+   Two-column CSS Grid on desktop.
+   Left column: form, limit, chart.
+   Right column: total, sort, list.
+=============================================== */
+
+.main-content {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.left-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+
+/* ==============================================
+   6. LAYOUT — FOOTER
+=============================================== */
+
+.site-footer {
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+
+/* ==============================================
+   7. CARDS
+   Shared visual wrapper for each section block.
+   Applied to: form, limit, chart, total, list.
+=============================================== */
+
+.form-section,
+.limit-section,
+.chart-section,
+.total-section,
+.sort-section,
+.list-section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+
+/* ==============================================
+   8. FORM — INPUTS, LABELS, SELECT
+=============================================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Custom dropdown arrow */
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.5rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 99, 210, 0.15);
+}
+
+/* Remove number input spinner arrows */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
+/* ==============================================
+   9. BUTTONS
+=============================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Primary — Add Expense */
+.btn-primary {
+  width: 100%;
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+  padding: 0.75rem;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Delete — individual transaction */
+.btn-delete {
+  background-color: transparent;
+  color: var(--color-delete);
+  border: 1px solid var(--color-delete);
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  border-radius: 0.4rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-delete:hover {
+  background-color: var(--color-delete);
+  color: #ffffff;
+}
+
+
+/* ==============================================
+   10. ERROR & WARNING MESSAGES
+=============================================== */
+
+/* Inline form validation error */
+.error-message {
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error-text);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Budget limit exceeded warning */
+.limit-warning {
+  background-color: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning-text);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+
+/* ==============================================
+   11. TOTAL SPENDING DISPLAY
+=============================================== */
+
+.total-section {
+  text-align: center;
+}
+
+.total-amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-total);
+  letter-spacing: -0.02em;
+  margin-top: 0.25rem;
+  transition: color 0.3s;
+}
+
+/* Applied by JS when spending exceeds the limit */
+.total-amount.over-limit {
+  color: var(--color-total-over);
+}
+
+
+/* ==============================================
+   12. SORT CONTROLS
+=============================================== */
+
+.sort-section {
+  padding: 1rem 1.5rem;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sort-controls label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.sort-controls select {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.sort-controls select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 99, 210, 0.15);
+}
+
+
+/* ==============================================
+   13. TRANSACTION LIST
+=============================================== */
+
+.list-section {
+  /* Fixed height with scroll when list grows long */
+  max-height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-right: 0.25rem; /* space for scrollbar */
+}
+
+/* Custom scrollbar (webkit) */
+.transaction-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.transaction-list::-webkit-scrollbar-track {
+  background: var(--color-surface-alt);
+  border-radius: 3px;
+}
+
+.transaction-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+/* Empty state */
+.empty-message {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+/* Individual transaction row */
+.transaction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  padding: 0.65rem 0.9rem;
+  transition: border-color 0.2s;
+}
+
+.transaction-item:hover {
+  border-color: var(--color-primary);
+}
+
+/* Left side: name, badge, date */
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0; /* allows text truncation */
+}
+
+.transaction-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.transaction-date {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+/* Right side: amount + delete button */
+.transaction-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.transaction-amount {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+
+/* ==============================================
+   14. CATEGORY BADGES
+   Small color-coded labels on each transaction.
+=============================================== */
+
+.transaction-category {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+}
+
+.category-food {
+  background-color: var(--color-food-bg);
+  color: var(--color-food);
+}
+
+.category-transport {
+  background-color: var(--color-transport-bg);
+  color: var(--color-transport);
+}
+
+.category-fun {
+  background-color: var(--color-fun-bg);
+  color: var(--color-fun);
+}
+
+
+/* ==============================================
+   15. CHART SECTION
+=============================================== */
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Ensure canvas scales responsively */
+#expense-chart {
+  max-width: 100%;
+}
+
+
+/* ==============================================
+   16. RESPONSIVE — MOBILE (≤768px)
+   Collapses the two-column grid into one column.
+=============================================== */
+
+@media (max-width: 768px) {
+
+  .main-content {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .theme-toggle-btn {
+    align-self: flex-start;
+  }
+
+  .header-titles h1 {
+    font-size: 1.25rem;
+  }
+
+  .total-amount {
+    font-size: 2rem;
+  }
+
+  .transaction-item {
+    flex-wrap: wrap;
+  }
+
+  .transaction-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .list-section {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 400px) {
+  .main-content {
+    padding: 0.75rem;
+  }
+
+  .form-section,
+  .limit-section,
+  .chart-section,
+  .total-section,
+  .sort-section,
+  .list-section {
+    padding: 1rem;
+  }
+}
+
+
+/* ==============================================
+   17. THEME TRANSITION
+   Smooth fade when switching between themes.
+=============================================== */
+
+body,
+.site-header,
+.site-footer,
+.form-section,
+.limit-section,
+.chart-section,
+.total-section,
+.sort-section,
+.list-section,
+.transaction-item,
+input,
+select {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
